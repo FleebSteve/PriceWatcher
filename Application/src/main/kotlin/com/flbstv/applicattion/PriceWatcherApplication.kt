@@ -1,4 +1,4 @@
-package com.flbstv.pw
+package com.flbstv.applicattion
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
