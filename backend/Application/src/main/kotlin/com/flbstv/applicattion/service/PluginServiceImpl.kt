@@ -1,7 +1,7 @@
 package com.flbstv.applicattion.service
 
 import com.flbstv.pw.api.PluginService
-import com.flbstv.pw.api.plugin.Plugin
+import com.flbstv.pw.plugin.api.Plugin
 import org.reflections.Reflections
 import org.reflections.util.ConfigurationBuilder
 import org.springframework.stereotype.Service

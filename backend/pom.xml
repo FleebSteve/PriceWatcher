@@ -23,6 +23,7 @@
         <module>API</module>
         <module>Application</module>
         <module>Store</module>
+        <module>PluginAPI</module>
     </modules>
 
     <dependencyManagement>

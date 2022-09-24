@@ -1,6 +1,6 @@
-package com.flbstv.pw.api.plugin
+package com.flbstv.pw.plugin.api
 
-import com.flbstv.pw.api.data.Product
+import com.flbstv.pw.plugin.api.model.Product
 import java.util.stream.Stream
 
 interface ProductProvider {

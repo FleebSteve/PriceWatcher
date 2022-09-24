@@ -1,10 +1,10 @@
 package com.flbstv.pw.store.product.stream
 
 import com.flbstv.pw.api.ProductConsumer
-import com.flbstv.pw.api.data.Product
+import com.flbstv.pw.plugin.api.model.Product
 import org.bson.types.ObjectId
 import org.springframework.stereotype.Service
-import java.util.Date
+import java.util.*
 
 @Service
 class MongoDBProductStreamStore(private val repository: ProductStreamRepository) : ProductConsumer {

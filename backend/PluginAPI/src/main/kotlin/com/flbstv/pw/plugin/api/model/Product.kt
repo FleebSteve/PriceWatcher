@@ -1,4 +1,4 @@
-package com.flbstv.pw.api.data
+package com.flbstv.pw.plugin.api.model
 
 data class Product(
     val source: String,
