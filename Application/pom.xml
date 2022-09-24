@@ -38,6 +38,12 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.flbstv</groupId>
+            <artifactId>Store</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.reflections</groupId>
