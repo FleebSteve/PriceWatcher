@@ -1,4 +1,4 @@
-package com.flbstv.pw.store
+package com.flbstv.pw.store.product
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories

@@ -1,4 +1,4 @@
-package com.flbstv.pw.store.plugin
+package com.flbstv.pw.store.product.plugin
 
 import org.bson.types.ObjectId
 import org.springframework.data.mongodb.repository.MongoRepository

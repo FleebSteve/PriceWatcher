@@ -1,4 +1,4 @@
-package com.flbstv.pw.store.plugin
+package com.flbstv.pw.store.product.plugin
 
 import com.flbstv.pw.api.PluginStateProvider
 import com.flbstv.pw.api.const.PluginStatus

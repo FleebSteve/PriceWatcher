@@ -1,4 +1,4 @@
-package com.flbstv.applicattion.service
+package com.flbstv.application.service
 
 import com.flbstv.pw.api.PluginService
 import com.flbstv.pw.plugin.api.Plugin
@@ -19,7 +19,7 @@ class PluginServiceImpl: PluginService {
     @PostConstruct
     fun init() {
         val reflections = Reflections(ConfigurationBuilder().forPackage(""))
-        val pluginImplementations = reflections.getSubTypesOf(Plugin::class.java);
+        val pluginImplementations = reflections.getSubTypesOf(Plugin::class.java)
         for (pluginImplementation in pluginImplementations) {
             val newInstance = pluginImplementation.getDeclaredConstructor().newInstance()
             plugins[newInstance.getNane()] = newInstance

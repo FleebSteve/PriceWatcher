@@ -1,0 +1,9 @@
+version: "3.8"
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    volumes:
+      - /home/pisti/Work/PriceWatcher/docker/mnt/mongo:/data/db
+    ports:
+      - 27017:27017

@@ -1,4 +1,4 @@
-package com.flbstv.applicattion.service
+package com.flbstv.application.service
 
 import com.flbstv.pw.api.PluginService
 import com.flbstv.pw.api.PluginStateProvider
@@ -31,7 +31,7 @@ class DataCollectorService(
     }
 
     private fun needToRun(state: PluginState): Boolean {
-        if (state.lastRun == null) {
+        if (state.lastRun == null || state.status == PluginStatus.FAILED) {
             return true
         }
         var diff = Date().time - state.lastRun!!.time
