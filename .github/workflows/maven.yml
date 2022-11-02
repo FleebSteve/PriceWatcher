@@ -37,4 +37,4 @@ jobs:
       with:
         context: .
         push: true
-        tags: pricewatcher:latest
+        tags:  ghcr.io/FleebSteve/pricewatcher:latest
