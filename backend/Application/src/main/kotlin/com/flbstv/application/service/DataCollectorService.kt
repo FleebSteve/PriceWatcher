@@ -5,15 +5,13 @@ import com.flbstv.pw.api.PluginStateProvider
 import com.flbstv.pw.api.ProductConsumer
 import com.flbstv.pw.api.const.PluginStatus
 import com.flbstv.pw.api.data.PluginState
+import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
-import java.time.temporal.Temporal
-import java.time.temporal.TemporalUnit
 import java.util.*
-import java.util.concurrent.TimeUnit
 import javax.annotation.PostConstruct
 
 @Service
@@ -23,6 +21,9 @@ class DataCollectorService(
     private val productConsumer: ProductConsumer
 ) {
 
+    var logger =  LoggerFactory.getLogger(DataCollectorService::class.java)
+
+
     @PostConstruct
     fun init() {
         run()
@@ -30,7 +31,9 @@ class DataCollectorService(
 
     @Scheduled(cron = "0 0 0/1 * * ?")
     fun run() {
+        logger.info("Check datasources")
         for (plugin in pluginService.plugins()) {
+            logger.info("Checking: {}", plugin.getNane())
             val state = pluginStateProvider.getState(plugin.getNane())
             if (needToRun(state)) {
                 var startTime = LocalDateTime.now()
@@ -44,6 +47,7 @@ class DataCollectorService(
                 pluginStateProvider.saveLog(plugin.getNane(), runId, startTime, finishTime)
             }
         }
+        logger.info("Check datasources finished")
     }
 
     private fun needToRun(state: PluginState): Boolean {
