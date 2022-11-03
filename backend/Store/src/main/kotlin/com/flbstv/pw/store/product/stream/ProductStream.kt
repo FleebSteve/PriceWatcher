@@ -9,6 +9,7 @@ import java.util.Date
 @Document("product_stream")
 data class ProductStream(
     @Id val id: ObjectId,
+    @Indexed(unique = false) val runId: Int,
     @Indexed(unique = false) val source: String,
     @Indexed(unique = false) val version: Int,
     @Indexed(unique = false) val productId: String,

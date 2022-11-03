@@ -9,9 +9,10 @@ import java.util.*
 @Service
 class MongoDBProductStreamStore(private val repository: ProductStreamRepository) : ProductConsumer {
 
-    override fun consume(product: Product) {
+    override fun consume(id: Int, product: Product) {
         val productEntity = ProductStream(
             ObjectId(),
+            id,
             product.source,
             product.version,
             product.id,
