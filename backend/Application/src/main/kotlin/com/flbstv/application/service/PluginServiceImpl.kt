@@ -26,12 +26,6 @@ class PluginServiceImpl: PluginService {
             val newInstance = pluginImplementation.getDeclaredConstructor().newInstance()
             plugins[newInstance.getNane()] = newInstance
         }
-        if(plugins.isEmpty()) {
-            var sparPlugin = SparPlugin()
-            var tescoPlugin = TescoPlugin()
-            plugins[sparPlugin.getNane()] = sparPlugin
-            plugins[tescoPlugin.getNane()] = tescoPlugin
-        }
     }
 
     override fun plugins(): List<Plugin> {

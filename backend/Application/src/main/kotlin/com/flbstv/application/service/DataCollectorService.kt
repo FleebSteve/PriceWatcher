@@ -54,7 +54,7 @@ class DataCollectorService(
         if (state.status == PluginStatus.FAILED) {
             return true
         }
-        val diffInSeconds = Duration.between(LocalDateTime.now(), state.lastRun).get(ChronoUnit.SECONDS)
+        val diffInSeconds = Duration.between(state.lastRun, LocalDateTime.now()).get(ChronoUnit.SECONDS)
         return diffInSeconds >= 24 * 60 * 60
     }
 }
