@@ -1,5 +1,8 @@
 package com.flbstv.pw.plugin.api.model
 
+
+var NULL_OBJECT = Product("NULL", 0, "NULL", "NULL", "NULL", 0.0, "NULL")
+
 data class Product(
     val source: String,
     val version: Int,

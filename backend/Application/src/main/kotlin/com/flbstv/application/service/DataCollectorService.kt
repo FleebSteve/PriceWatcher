@@ -5,10 +5,13 @@ import com.flbstv.pw.api.PluginStateProvider
 import com.flbstv.pw.api.ProductConsumer
 import com.flbstv.pw.api.const.PluginStatus
 import com.flbstv.pw.api.data.PluginState
+import com.flbstv.pw.plugin.api.Plugin
+import com.flbstv.pw.plugin.api.model.NULL_OBJECT
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
+import java.lang.Exception
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -21,7 +24,7 @@ class DataCollectorService(
     private val productConsumer: ProductConsumer
 ) {
 
-    var logger: Logger =  LoggerFactory.getLogger(DataCollectorService::class.java)
+    var logger: Logger = LoggerFactory.getLogger(DataCollectorService::class.java)
 
 
     @PostConstruct
@@ -35,19 +38,33 @@ class DataCollectorService(
         for (plugin in pluginService.plugins()) {
             logger.info("Checking: {}", plugin.getNane())
             val state = pluginStateProvider.getState(plugin.getNane())
-            if (needToRun(state)) {
-                var startTime = LocalDateTime.now()
-                var runId = state.id + 1;
-                var pluginState = PluginState(runId, plugin.getNane(), PluginStatus.RUNNING, LocalDateTime.now())
-                pluginStateProvider.saveState(pluginState)
-                plugin.productProvider().getProducts().forEach { productConsumer.consume(runId, it) }
-                var finishTime = LocalDateTime.now()
-                var finishedState = PluginState(runId, plugin.getNane(), PluginStatus.IDLE, LocalDateTime.now())
-                pluginStateProvider.saveState(finishedState)
-                pluginStateProvider.saveLog(plugin.getNane(), runId, startTime, finishTime)
+            if (needToRun(state) && plugin.getNane() == "ALDI") {
+                run(state, plugin)
             }
         }
         logger.info("Check datasources finished")
+    }
+
+    private fun run(state: PluginState, plugin: Plugin) {
+        try {
+            doRun(state, plugin)
+        } catch (e: Exception) {
+            logger.error("Plugin run failed", e)
+            var finishedState = PluginState(state.id + 1, plugin.getNane(), PluginStatus.FAILED, LocalDateTime.now())
+            pluginStateProvider.saveState(finishedState)
+        }
+    }
+
+    private fun doRun(state: PluginState, plugin: Plugin) {
+        var startTime = LocalDateTime.now()
+        var runId = state.id + 1;
+        var pluginState = PluginState(runId, plugin.getNane(), PluginStatus.RUNNING, LocalDateTime.now())
+        pluginStateProvider.saveState(pluginState)
+        plugin.productProvider().getProducts().filter { it != NULL_OBJECT }.forEach { productConsumer.consume(runId, it) }
+        var finishTime = LocalDateTime.now()
+        var finishedState = PluginState(runId, plugin.getNane(), PluginStatus.IDLE, LocalDateTime.now())
+        pluginStateProvider.saveState(finishedState)
+        pluginStateProvider.saveLog(plugin.getNane(), runId, startTime, finishTime)
     }
 
     private fun needToRun(state: PluginState): Boolean {
