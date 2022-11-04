@@ -1,13 +1,13 @@
 package com.flbstv.pw.plugin.api.impl.spar
 
-import com.fasterxml.jackson.core.type.TypeReference
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.flbstv.pw.plugin.api.model.Product
 import org.json.JSONArray
 import org.json.JSONObject
 import org.jsoup.HttpStatusException
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.web.client.RestTemplate
 import java.math.BigDecimal
 
@@ -22,6 +22,10 @@ class SparProductIterator : Iterator<Product> {
     private val categoryIterator: Iterator<String>
     private var categoryElements: List<Map<String, Any>>
     private var categoryElementIterator: Iterator<Map<String, Any>>
+    private val restTemplate: RestTemplate
+
+
+    var logger: Logger =  LoggerFactory.getLogger(SparProductIterator::class.java)
 
     init {
         val mainPage = getDocument("https://www.spar.hu/onlineshop")
@@ -30,6 +34,7 @@ class SparProductIterator : Iterator<Product> {
         categoryIterator = categoryList.iterator()
         categoryElements = ArrayList()
         categoryElementIterator = categoryElements.iterator()
+        restTemplate = RestTemplate()
     }
 
     override fun hasNext(): Boolean {
@@ -41,10 +46,14 @@ class SparProductIterator : Iterator<Product> {
             nextCategoryElements()
         }
         val productPropertyMap = categoryElementIterator.next()
-        return createProductFromPropertyMap(productPropertyMap)
+        val nextElement = createProductFromPropertyMap(productPropertyMap)
+        logger.debug("Next element: {}", nextElement.id)
+        logger.trace("Value: {}", nextElement)
+        return nextElement
     }
 
     private fun createProductFromPropertyMap(productPropertyMap: Map<String, Any>): Product {
+        logger.debug("Creating product: {}", productPropertyMap)
         val masterValues = productPropertyMap["masterValues"] as Map<String, Any>
         val title = masterValues["title"] as String
         return Product(
@@ -82,8 +91,7 @@ class SparProductIterator : Iterator<Product> {
     private fun nextCategoryElements() {
         val nextCategory = categoryIterator.next()
         val url = BASE_URL + nextCategory
-        println(url)
-        val restTemplate = RestTemplate()
+        logger.info("Getting: {}", url)
         val response = restTemplate.getForEntity(url, String::class.java)
         val responseObject = JSONObject(response.body)
         val hits: JSONArray = responseObject.get("hits") as JSONArray

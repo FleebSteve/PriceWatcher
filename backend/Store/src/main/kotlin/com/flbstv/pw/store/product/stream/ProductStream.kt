@@ -4,7 +4,7 @@ import org.bson.types.ObjectId
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
-import java.util.Date
+import java.util.*
 
 @Document("product_stream")
 data class ProductStream(
