@@ -13,8 +13,7 @@ class SparProductProvider : ProductProvider {
     }
 
     override fun getProducts(): Stream<Product> {
-
         var iterator = SparProductIterator()
-        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, Spliterator.DISTINCT), false);
+        return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, Spliterator.DISTINCT), false)
     }
 }
