@@ -5,13 +5,13 @@ import com.flbstv.pw.api.PluginStateProvider
 import com.flbstv.pw.api.ProductConsumer
 import com.flbstv.pw.api.const.PluginStatus
 import com.flbstv.pw.api.data.PluginState
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
-import java.util.*
 import javax.annotation.PostConstruct
 
 @Service
@@ -21,7 +21,7 @@ class DataCollectorService(
     private val productConsumer: ProductConsumer
 ) {
 
-    var logger =  LoggerFactory.getLogger(DataCollectorService::class.java)
+    var logger: Logger =  LoggerFactory.getLogger(DataCollectorService::class.java)
 
 
     @PostConstruct

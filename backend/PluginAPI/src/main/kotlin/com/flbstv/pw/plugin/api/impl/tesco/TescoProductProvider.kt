@@ -8,10 +8,6 @@ import java.util.stream.StreamSupport
 
 class TescoProductProvider : ProductProvider {
 
-    fun init() {
-
-    }
-
     override fun getProducts(): Stream<Product> {
 
         var iterator = TescoProductIterator()

@@ -2,8 +2,6 @@ package com.flbstv.application.service
 
 import com.flbstv.pw.api.PluginService
 import com.flbstv.pw.plugin.api.Plugin
-import com.flbstv.pw.plugin.api.impl.spar.SparPlugin
-import com.flbstv.pw.plugin.api.impl.tesco.TescoPlugin
 import org.reflections.Reflections
 import org.reflections.util.ConfigurationBuilder
 import org.springframework.stereotype.Service

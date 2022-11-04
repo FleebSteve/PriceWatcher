@@ -5,6 +5,8 @@ import com.jayway.jsonpath.JsonPath
 import org.jsoup.HttpStatusException
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import kotlin.math.ceil
 
 private const val SOURCE_NAME = "TESCO"
@@ -18,6 +20,8 @@ class TescoProductIterator : Iterator<Product> {
     private var categoryElementIterator: Iterator<Map<String, Any>>
     private var currentCategoryPage = 0
     private var numberOfCategoryPages = 0
+
+    var logger: Logger =  LoggerFactory.getLogger(TescoProductIterator::class.java)
 
 
     init {
@@ -40,7 +44,10 @@ class TescoProductIterator : Iterator<Product> {
             }
         }
         val productPropertyMap = categoryElementIterator.next()
-        return createProductFromPropertyMap(productPropertyMap)
+        val nextElement = createProductFromPropertyMap(productPropertyMap)
+        logger.debug("Next element: {}", nextElement.id)
+        logger.trace("Value: {}", nextElement)
+        return nextElement
     }
 
     private fun readNextPageInCategory() {
@@ -77,6 +84,7 @@ class TescoProductIterator : Iterator<Product> {
     }
 
     private fun createProductFromPropertyMap(productPropertyMap: Map<String, Any>): Product {
+        logger.debug("Creating product: {}", productPropertyMap)
         val title = safeGet("title", productPropertyMap) as String
         var price = safeGetNumber("price", productPropertyMap)
         return Product(
@@ -118,7 +126,7 @@ class TescoProductIterator : Iterator<Product> {
     }
 
     private fun getDocument(url: String): Document {
-        println(url)
+        logger.info("Getting: {}", url)
         for (i in 1..10) {
             try {
                 return Jsoup.connect(url).header(
