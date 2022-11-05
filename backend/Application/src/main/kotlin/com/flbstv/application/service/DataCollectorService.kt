@@ -11,7 +11,6 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-import java.lang.Exception
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -38,7 +37,7 @@ class DataCollectorService(
         for (plugin in pluginService.plugins()) {
             logger.info("Checking: {}", plugin.getNane())
             val state = pluginStateProvider.getState(plugin.getNane())
-            if (needToRun(state) && plugin.getNane() == "ALDI") {
+            if (needToRun(state)) {
                 run(state, plugin)
             }
         }
