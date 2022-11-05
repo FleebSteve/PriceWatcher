@@ -10,6 +10,7 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.web.client.RestTemplate
+import java.lang.Exception
 import java.math.BigDecimal
 import java.util.*
 import java.util.stream.StreamSupport
@@ -45,7 +46,16 @@ class AuchanProductIterator : Iterator<Product> {
 
     override fun next(): Product {
         while (!categoryElementIterator.hasNext() && hasNext()) {
-            nextCategoryElements()
+            var categoryId = categoryIdIterator.next()
+            for (i in 1..3) {
+                try {
+                    nextCategoryElements(categoryId)
+                    break
+                } catch (e: Exception) {
+                    logger.warn("Failed to get data: {}", e.message)
+                    Thread.sleep(1000)
+                }
+            }
         }
         if (!hasNext()) {
             return NULL_OBJECT
@@ -58,9 +68,9 @@ class AuchanProductIterator : Iterator<Product> {
     }
 
     private fun createProductFromPropertyMap(productPropertyMap: Map<String, Any>): Product {
-        var propertyMap = productPropertyMap["selectedVariant"] as Map<String,Any>
+        var propertyMap = productPropertyMap["selectedVariant"] as Map<String, Any>
         var productId = propertyMap["id"] as Int
-        var priceMap = propertyMap["price"] as Map<String,Any>
+        var priceMap = propertyMap["price"] as Map<String, Any>
         return Product(
             SOURCE_NAME,
             PLUGIN_VERSION,
@@ -93,8 +103,7 @@ class AuchanProductIterator : Iterator<Product> {
         }
     }
 
-    private fun nextCategoryElements() {
-        var categoryId = categoryIdIterator.next()
+    private fun nextCategoryElements(categoryId: Int) {
         var url = "${BASE_URL}/api/v2/products?categoryId={categoryId}&itemsPerPage={itemsPerPage}&page={page}"
         var params = mapOf("categoryId" to categoryId, "itemsPerPage" to 15000, "page" to 1)
         logger.info("Getting: {} {}", url, params)
