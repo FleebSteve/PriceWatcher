@@ -28,7 +28,8 @@ class DataCollectorService(
 
     @PostConstruct
     fun init() {
-        run()
+        var thread = Thread { run() }
+        thread.start()
     }
 
     @Scheduled(cron = "0 0 0/1 * * ?")
