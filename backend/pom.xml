@@ -24,7 +24,7 @@
         <module>Application</module>
         <module>Store</module>
         <module>PluginAPI</module>
-        <module>JarLoader</module>
+        <module>Data</module>
     </modules>
 
     <dependencyManagement>

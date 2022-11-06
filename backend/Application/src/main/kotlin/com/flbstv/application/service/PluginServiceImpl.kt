@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 import javax.annotation.PostConstruct
 
 @Service
-class PluginServiceImpl: PluginService {
+class PluginServiceImpl : PluginService {
 
     val plugins: MutableMap<String, Plugin>
 
@@ -28,5 +28,13 @@ class PluginServiceImpl: PluginService {
 
     override fun plugins(): List<Plugin> {
         return plugins.values.stream().toList();
+    }
+
+    override fun getPlugin(name: String): Plugin {
+        var plugin = plugins[name]
+        if (plugin != null) {
+            return plugin
+        }
+        throw RuntimeException("Plugin not found: $name")
     }
 }

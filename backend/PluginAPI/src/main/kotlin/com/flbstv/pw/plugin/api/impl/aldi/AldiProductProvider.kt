@@ -12,4 +12,8 @@ class AldiProductProvider : ProductProvider {
         var iterator = AldiProductIterator()
         return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, Spliterator.DISTINCT), false)
     }
+
+    override fun imageUrl(product: Product): String {
+        return product.raw["MediaUrlM"] as String
+    }
 }

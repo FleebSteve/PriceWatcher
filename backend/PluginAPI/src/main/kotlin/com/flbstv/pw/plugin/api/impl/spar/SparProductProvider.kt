@@ -8,12 +8,12 @@ import java.util.stream.StreamSupport
 
 class SparProductProvider : ProductProvider {
 
-    fun init() {
-
-    }
-
     override fun getProducts(): Stream<Product> {
         var iterator = SparProductIterator()
         return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, Spliterator.DISTINCT), false)
+    }
+
+    override fun imageUrl(product: Product): String {
+        return product.raw["image-url"] as String
     }
 }

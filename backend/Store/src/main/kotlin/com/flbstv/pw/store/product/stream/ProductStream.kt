@@ -16,5 +16,5 @@ data class ProductStream(
     @Indexed(unique = false) val date: Date,
     val description: String,
     val price: Double,
-    val raw: Any
+    val raw: Map<String, Any>
 )
