@@ -16,6 +16,11 @@ class AuchanProductProvider : ProductProvider {
     override fun imageUrl(product: Product): String {
         var defaultVariant = product.raw["defaultVariant"] as Map<String, Any>
         var media = defaultVariant["media"] as Map<String, Any>
-        return media["mainImage"] as String
+        var mainImage = media["mainImage"]
+        return if (mainImage != null) {
+            media["mainImage"] as String
+        } else {
+            ""
+        }
     }
 }

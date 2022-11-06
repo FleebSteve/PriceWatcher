@@ -35,6 +35,9 @@ class ImageDownloader(private val pluginService: PluginService, private val obje
     fun consumeProductStream(message: String) {
         val product = objectMapper.readValue(message, Product::class.java)
         val imageUrl = pluginService.getPlugin(product.source).productProvider().imageUrl(product)
+        if (imageUrl.isEmpty()) {
+            logger.warn("Couldn't find image URL: ${product.source}/${product.id}")
+        }
         val fileName = getFileName(imageUrl)
         val path = Paths.get(storeLocation, fileName)
         if (!Files.exists(path)) {
