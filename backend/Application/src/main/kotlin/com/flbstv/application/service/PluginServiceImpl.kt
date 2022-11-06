@@ -5,10 +5,11 @@ import com.flbstv.pw.plugin.api.Plugin
 import org.reflections.Reflections
 import org.reflections.util.ConfigurationBuilder
 import org.springframework.stereotype.Service
+import java.lang.RuntimeException
 import javax.annotation.PostConstruct
 
 @Service
-class PluginServiceImpl: PluginService {
+class PluginServiceImpl : PluginService {
 
     val plugins: MutableMap<String, Plugin>
 
@@ -28,5 +29,13 @@ class PluginServiceImpl: PluginService {
 
     override fun plugins(): List<Plugin> {
         return plugins.values.stream().toList();
+    }
+
+    override fun getPlugin(name: String): Plugin {
+        var plugin = plugins[name]
+        if (plugin != null) {
+            return plugin
+        }
+        throw RuntimeException("Plugin not found: $name")
     }
 }
