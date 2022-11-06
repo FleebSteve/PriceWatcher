@@ -5,7 +5,6 @@ import com.flbstv.pw.plugin.api.Plugin
 import org.reflections.Reflections
 import org.reflections.util.ConfigurationBuilder
 import org.springframework.stereotype.Service
-import java.lang.RuntimeException
 import javax.annotation.PostConstruct
 
 @Service
