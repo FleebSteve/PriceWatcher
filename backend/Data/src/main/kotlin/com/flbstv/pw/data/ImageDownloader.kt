@@ -12,12 +12,15 @@ import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Service
 import org.springframework.util.StreamUtils
 import org.springframework.web.client.RestTemplate
+import java.io.File
 import java.io.FileOutputStream
+import java.math.BigInteger
 import java.net.URI
+import java.nio.charset.StandardCharsets
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.Paths
-import java.util.*
+import java.security.MessageDigest
 
 
 @Service
@@ -60,10 +63,18 @@ class ImageDownloader(private val pluginService: PluginService, private val obje
     }
 
     private fun getFileName(imageUrl: String): String {
-        var name = Base64.getEncoder().encodeToString(imageUrl.encodeToByteArray())
-        val ext = imageUrl.split(".")
-        if (ext.isNotEmpty()) {
-            name = "$name.${ext.last()}"
+        var file = File(imageUrl)
+        var extension = file.extension
+
+        val messageDigest: MessageDigest = MessageDigest.getInstance("MD5")
+        messageDigest.reset();
+
+        messageDigest.update(imageUrl.toByteArray(StandardCharsets.UTF_8))
+        val bigInt = BigInteger(1, messageDigest.digest())
+        var name = bigInt.toString(48)
+
+        if (extension.isNotEmpty()) {
+            name = "$name.${extension}"
         }
         return name
     }
