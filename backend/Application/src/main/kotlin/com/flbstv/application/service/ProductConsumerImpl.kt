@@ -25,4 +25,10 @@ class ProductConsumerImpl(
         kafkaTemplate.send(KafkaTopics.PRODUCT_STREAM, objectMapper.writeValueAsString(product))
         logger.debug("Consumed: $product")
     }
+
+    override fun replay(product: Product) {
+        logger.debug("Replaying: $product")
+        kafkaTemplate.send(KafkaTopics.PRODUCT_STREAM, objectMapper.writeValueAsString(product))
+        logger.debug("Replayed: $product")
+    }
 }
