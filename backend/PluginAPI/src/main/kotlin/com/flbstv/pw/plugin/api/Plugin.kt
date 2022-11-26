@@ -5,4 +5,6 @@ interface Plugin {
     fun getNane(): String
 
     fun productProvider() : ProductProvider
+
+    fun enabled(): Boolean = true
 }

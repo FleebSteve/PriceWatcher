@@ -2,10 +2,10 @@ package com.flbstv.application.service
 
 import com.flbstv.pw.api.PluginService
 import com.flbstv.pw.plugin.api.Plugin
+import jakarta.annotation.PostConstruct
 import org.reflections.Reflections
 import org.reflections.util.ConfigurationBuilder
 import org.springframework.stereotype.Service
-import javax.annotation.PostConstruct
 
 @Service
 class PluginServiceImpl : PluginService {
