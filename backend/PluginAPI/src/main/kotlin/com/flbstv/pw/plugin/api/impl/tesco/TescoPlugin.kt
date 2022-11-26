@@ -12,4 +12,8 @@ class TescoPlugin : Plugin {
     override fun productProvider(): ProductProvider {
         return TescoProductProvider()
     }
+
+    override fun enabled(): Boolean {
+        return false
+    }
 }

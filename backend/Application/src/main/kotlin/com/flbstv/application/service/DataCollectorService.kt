@@ -38,7 +38,7 @@ class DataCollectorService(
         for (plugin in pluginService.plugins()) {
             logger.info("Checking: {}", plugin.getNane())
             val state = pluginStateProvider.getState(plugin.getNane())
-            if (needToRun(state)) {
+            if (needToRun(state) && plugin.enabled()) {
                 run(state, plugin)
             }
         }
