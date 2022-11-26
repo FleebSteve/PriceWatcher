@@ -7,6 +7,7 @@ import com.flbstv.pw.api.const.PluginStatus
 import com.flbstv.pw.api.data.PluginState
 import com.flbstv.pw.plugin.api.Plugin
 import com.flbstv.pw.plugin.api.model.NULL_OBJECT
+import jakarta.annotation.PostConstruct
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.scheduling.annotation.Scheduled
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service
 import java.time.Duration
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
-import javax.annotation.PostConstruct
 
 @Service
 class DataCollectorService(
