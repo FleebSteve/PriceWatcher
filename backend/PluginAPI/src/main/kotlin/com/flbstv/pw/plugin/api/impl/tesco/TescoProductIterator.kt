@@ -9,6 +9,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.net.InetSocketAddress
 import java.net.Proxy
+import java.net.SocketException
 import kotlin.math.ceil
 
 private const val SOURCE_NAME = "TESCO"
@@ -23,7 +24,7 @@ class TescoProductIterator(private val proxyHost: String, private val proxyPort:
     private var currentCategoryPage = 0
     private var numberOfCategoryPages = 0
 
-    var logger: Logger =  LoggerFactory.getLogger(TescoProductIterator::class.java)
+    var logger: Logger = LoggerFactory.getLogger(TescoProductIterator::class.java)
 
 
     init {
@@ -140,11 +141,11 @@ class TescoProductIterator(private val proxyHost: String, private val proxyPort:
                 return Jsoup.connect(url).timeout(60000).proxy(proxy).header(
                     "user-agent",
                     "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Mobile Safari/537.36"
-                )
-                    .get()
+                ).get()
+
             } catch (e: HttpStatusException) {
+            } catch (e: SocketException) {
             }
-            Thread.sleep(5000L)
         }
         throw RuntimeException("Couldn't execute request: $url")
     }
