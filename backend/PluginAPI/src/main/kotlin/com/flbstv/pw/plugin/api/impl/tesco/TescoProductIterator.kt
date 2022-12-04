@@ -7,12 +7,14 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.net.InetSocketAddress
+import java.net.Proxy
 import kotlin.math.ceil
 
 private const val SOURCE_NAME = "TESCO"
 private const val PLUGIN_VERSION = 1
 
-class TescoProductIterator : Iterator<Product> {
+class TescoProductIterator(private val proxyHost: String, private val proxyPort: Int) : Iterator<Product> {
     private val categoryUrls: List<String>
     private val categoryIterator: Iterator<String>
     private var currentCategoryUrl: String = ""
@@ -25,6 +27,7 @@ class TescoProductIterator : Iterator<Product> {
 
 
     init {
+        System.setProperty("socksProxyVersion", "4")
         categoryUrls = categoryUrls()
         categoryIterator = categoryUrls.iterator()
         categoryElements = ArrayList()
@@ -127,9 +130,14 @@ class TescoProductIterator : Iterator<Product> {
 
     private fun getDocument(url: String): Document {
         logger.info("Getting: {}", url)
+        val proxy = Proxy(
+            Proxy.Type.SOCKS,
+            InetSocketAddress.createUnresolved(proxyHost, proxyPort)
+        );
         for (i in 1..10) {
             try {
-                return Jsoup.connect(url).header(
+                Thread.sleep(1000)
+                return Jsoup.connect(url).proxy(proxy).header(
                     "user-agent",
                     "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Mobile Safari/537.36"
                 )
