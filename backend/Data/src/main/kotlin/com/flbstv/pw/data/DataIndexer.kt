@@ -11,6 +11,7 @@ import org.apache.http.HttpHost
 import org.elasticsearch.client.RestClient
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Service
 
@@ -20,12 +21,18 @@ class DataIndexer(private val objectMapper: ObjectMapper) {
 
     private var logger: Logger = LoggerFactory.getLogger(DataIndexer::class.java)
 
+    @Value("\${elasticsearch.host}")
+    lateinit var elasticsearchHost: String
+
+    @Value("\${elasticsearch.port}")
+    var elasticsearchPort: Int = 0
+
     private val client: ElasticsearchClient
 
     init {
 
         val restClient = RestClient.builder(
-            HttpHost("localhost", 9200)
+            HttpHost(elasticsearchHost, elasticsearchPort)
         ).build()
 
         val transport: ElasticsearchTransport = RestClientTransport(
