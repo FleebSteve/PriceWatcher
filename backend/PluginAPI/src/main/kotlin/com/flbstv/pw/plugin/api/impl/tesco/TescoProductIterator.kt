@@ -27,7 +27,6 @@ class TescoProductIterator(private val proxyHost: String, private val proxyPort:
 
 
     init {
-        System.setProperty("socksProxyVersion", "4")
         categoryUrls = categoryUrls()
         categoryIterator = categoryUrls.iterator()
         categoryElements = ArrayList()
@@ -137,7 +136,8 @@ class TescoProductIterator(private val proxyHost: String, private val proxyPort:
         for (i in 1..10) {
             try {
                 Thread.sleep(30000)
-                return Jsoup.connect(url).proxy(proxy).header(
+                System.setProperty("socksProxyVersion", "4")
+                return Jsoup.connect(url).timeout(60000).proxy(proxy).header(
                     "user-agent",
                     "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Mobile Safari/537.36"
                 )
