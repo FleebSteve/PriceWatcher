@@ -42,6 +42,13 @@
             <artifactId>API</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>co.elastic.clients</groupId>
+            <artifactId>elasticsearch-java</artifactId>
+            <version>8.5.2</version>
+        </dependency>
+
     </dependencies>
 
 </project>
