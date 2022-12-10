@@ -7,6 +7,7 @@ import co.elastic.clients.transport.rest_client.RestClientTransport
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.flbstv.pw.api.const.KafkaTopics
 import com.flbstv.pw.plugin.api.model.Product
+import jakarta.annotation.PostConstruct
 import org.apache.http.HttpHost
 import org.elasticsearch.client.RestClient
 import org.slf4j.Logger
@@ -22,14 +23,15 @@ class DataIndexer(private val objectMapper: ObjectMapper) {
     private var logger: Logger = LoggerFactory.getLogger(DataIndexer::class.java)
 
     @Value("\${elasticsearch.host}")
-    lateinit var elasticsearchHost: String
+    private lateinit var elasticsearchHost: String
 
     @Value("\${elasticsearch.port}")
-    var elasticsearchPort: Int = 0
+    private var elasticsearchPort: Int = 0
 
-    private val client: ElasticsearchClient
+    private lateinit var client: ElasticsearchClient
 
-    init {
+    @PostConstruct
+    fun init() {
 
         val restClient = RestClient.builder(
             HttpHost(elasticsearchHost, elasticsearchPort)
