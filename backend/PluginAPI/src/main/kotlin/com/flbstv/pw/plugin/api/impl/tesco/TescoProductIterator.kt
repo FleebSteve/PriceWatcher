@@ -136,7 +136,7 @@ class TescoProductIterator(private val proxyHost: String, private val proxyPort:
         );
         for (i in 1..10) {
             try {
-                Thread.sleep(30000)
+                Thread.sleep(15000)
                 System.setProperty("socksProxyVersion", "4")
                 return Jsoup.connect(url).timeout(60000).proxy(proxy).header(
                     "user-agent",
