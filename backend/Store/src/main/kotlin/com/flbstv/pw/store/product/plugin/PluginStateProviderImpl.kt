@@ -1,6 +1,6 @@
 package com.flbstv.pw.store.product.plugin
 
-import com.flbstv.pw.api.PluginStateProvider
+import com.flbstv.pw.api.service.PluginStateProvider
 import com.flbstv.pw.api.const.PluginStatus
 import com.flbstv.pw.api.data.PluginState
 import org.bson.types.ObjectId

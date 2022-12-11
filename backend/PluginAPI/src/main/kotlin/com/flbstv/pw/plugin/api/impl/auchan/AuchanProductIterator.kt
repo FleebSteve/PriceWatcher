@@ -1,7 +1,7 @@
 package com.flbstv.pw.plugin.api.impl.auchan
 
-import com.flbstv.pw.plugin.api.model.NULL_OBJECT
-import com.flbstv.pw.plugin.api.model.Product
+import com.flbstv.pw.api.data.NULL_OBJECT
+import com.flbstv.pw.api.data.Product
 import org.json.JSONArray
 import org.json.JSONObject
 import org.slf4j.Logger

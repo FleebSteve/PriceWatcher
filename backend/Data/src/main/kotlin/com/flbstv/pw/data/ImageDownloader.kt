@@ -1,9 +1,9 @@
 package com.flbstv.pw.data
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.flbstv.pw.api.PluginService
 import com.flbstv.pw.api.const.KafkaTopics
-import com.flbstv.pw.plugin.api.model.Product
+import com.flbstv.pw.api.data.Product
+import com.flbstv.pw.api.service.PluginService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value

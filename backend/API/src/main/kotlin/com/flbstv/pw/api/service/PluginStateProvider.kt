@@ -1,4 +1,4 @@
-package com.flbstv.pw.api
+package com.flbstv.pw.api.service
 
 import com.flbstv.pw.api.data.PluginState
 import java.time.LocalDateTime

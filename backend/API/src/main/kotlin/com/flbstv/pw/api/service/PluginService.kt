@@ -1,6 +1,4 @@
-package com.flbstv.pw.api
-
-import com.flbstv.pw.plugin.api.Plugin
+package com.flbstv.pw.api.service
 
 interface PluginService {
     fun plugins(): List<Plugin>

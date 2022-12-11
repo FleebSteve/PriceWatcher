@@ -1,7 +1,7 @@
 package com.flbstv.application.service
 
-import com.flbstv.pw.api.PluginService
-import com.flbstv.pw.plugin.api.Plugin
+import com.flbstv.pw.api.service.Plugin
+import com.flbstv.pw.api.service.PluginService
 import jakarta.annotation.PostConstruct
 import org.springframework.stereotype.Service
 

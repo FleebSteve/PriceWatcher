@@ -1,4 +1,4 @@
-package com.flbstv.pw.plugin.api
+package com.flbstv.pw.api.service
 
 interface Plugin {
 

@@ -1,7 +1,7 @@
 package com.flbstv.pw.store.product.stream
 
-import com.flbstv.pw.api.ProductStore
-import com.flbstv.pw.plugin.api.model.Product
+import com.flbstv.pw.api.data.Product
+import com.flbstv.pw.api.service.ProductStore
 import org.bson.types.ObjectId
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

@@ -1,6 +1,6 @@
 package com.flbstv.pw.plugin.api.impl.spar
 
-import com.flbstv.pw.plugin.api.model.Product
+import com.flbstv.pw.api.data.Product
 import org.json.JSONArray
 import org.json.JSONObject
 import org.jsoup.HttpStatusException

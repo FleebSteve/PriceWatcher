@@ -1,4 +1,4 @@
-package com.flbstv.pw.plugin.api.model
+package com.flbstv.pw.api.data
 
 
 var NULL_OBJECT = Product("NULL", 0, "NULL", "NULL", "NULL", 0.0, emptyMap())

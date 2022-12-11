@@ -1,6 +1,6 @@
 package com.flbstv.pw.plugin.api.impl.tesco
 
-import com.flbstv.pw.plugin.api.model.Product
+import com.flbstv.pw.api.data.Product
 import com.jayway.jsonpath.JsonPath
 import org.jsoup.HttpStatusException
 import org.jsoup.Jsoup
