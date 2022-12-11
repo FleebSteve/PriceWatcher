@@ -3,7 +3,7 @@ package com.flbstv.pw.data
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.flbstv.pw.api.const.KafkaTopics
 import com.flbstv.pw.api.data.Product
-import com.flbstv.pw.api.service.PluginService
+import com.flbstv.pw.api.service.ProductDatasourceService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
@@ -24,7 +24,7 @@ import java.security.MessageDigest
 
 
 @Service
-class ImageDownloader(private val pluginService: PluginService, private val objectMapper: ObjectMapper) {
+class ImageDownloader(private val productDatasourceService: ProductDatasourceService, private val objectMapper: ObjectMapper) {
 
     @Value("\${image.store.location:}")
     lateinit var storeLocation: String
@@ -37,7 +37,7 @@ class ImageDownloader(private val pluginService: PluginService, private val obje
     @KafkaListener(topics = [KafkaTopics.PRODUCT_STREAM], groupId = "product.image.downloader")
     fun consumeProductStream(message: String) {
         val product = objectMapper.readValue(message, Product::class.java)
-        val imageUrl = pluginService.getPlugin(product.source).productProvider().imageUrl(product)
+        val imageUrl = productDatasourceService.getProductDatasourceByName(product.source).productProvider().imageUrl(product)
         if (imageUrl.isEmpty()) {
             logger.warn("Couldn't find image URL: ${product.source}/${product.id}")
         }

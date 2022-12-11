@@ -1,12 +1,12 @@
 package com.flbstv.application.service
 
-import com.flbstv.pw.api.const.PluginStatus
+import com.flbstv.pw.api.const.ProductDatasourceStatus
 import com.flbstv.pw.api.data.NULL_OBJECT
-import com.flbstv.pw.api.data.PluginState
-import com.flbstv.pw.api.service.Plugin
-import com.flbstv.pw.api.service.PluginService
-import com.flbstv.pw.api.service.PluginStateProvider
+import com.flbstv.pw.api.data.ProductDatasourceState
 import com.flbstv.pw.api.service.ProductConsumer
+import com.flbstv.pw.api.service.ProductDatasource
+import com.flbstv.pw.api.service.ProductDatasourceService
+import com.flbstv.pw.api.service.ProductDatasourceStateProvider
 import jakarta.annotation.PostConstruct
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -18,8 +18,8 @@ import java.time.temporal.ChronoUnit
 
 @Service
 class DataCollectorService(
-    private val pluginService: PluginService,
-    private val pluginStateProvider: PluginStateProvider,
+    private val productDatasourceService: ProductDatasourceService,
+    private val productDatasourceStateProvider: ProductDatasourceStateProvider,
     private val productConsumer: ProductConsumer
 ) {
 
@@ -35,58 +35,58 @@ class DataCollectorService(
     @Scheduled(cron = "0 0 0/1 * * ?")
     fun run() {
         logger.info("Check datasources")
-        for (plugin in pluginService.plugins()) {
-            logger.info("Checking: {}", plugin.getNane())
-            val state = pluginStateProvider.getState(plugin.getNane())
-            if (needToRun(state) && plugin.enabled()) {
-                run(state, plugin)
+        for (productDatasource in productDatasourceService.productDatasourceList()) {
+            logger.info("Checking: {}", productDatasource.getNane())
+            val state = productDatasourceStateProvider.getState(productDatasource.getNane())
+            if (needToRun(state) && productDatasource.enabled()) {
+                run(state, productDatasource)
             }
         }
         logger.info("Check datasources finished")
     }
 
-    private fun run(state: PluginState, plugin: Plugin) {
+    private fun run(state: ProductDatasourceState, productDatasource: ProductDatasource) {
         try {
-            doRun(state, plugin)
+            doRun(state, productDatasource)
         } catch (e: Exception) {
-            logger.error("Plugin run failed", e)
-            setFailedState(state, plugin)
+            logger.error("ProductDatasource run failed", e)
+            setFailedState(state, productDatasource)
         }
     }
 
-    private fun doRun(state: PluginState, plugin: Plugin) {
+    private fun doRun(state: ProductDatasourceState, productDatasource: ProductDatasource) {
         var startTime = LocalDateTime.now()
         var runId = state.id + 1;
-        setRunningState(runId, plugin)
-        plugin.productProvider().getProducts().filter { it != NULL_OBJECT }
+        setRunningState(runId, productDatasource)
+        productDatasource.productProvider().getProducts().filter { it != NULL_OBJECT }
             .forEach { productConsumer.consume(runId, it) }
         var finishTime = LocalDateTime.now()
-        setFinishedState(runId, plugin, startTime, finishTime)
+        setFinishedState(runId, productDatasource, startTime, finishTime)
     }
 
     private fun setFinishedState(
         runId: Int,
-        plugin: Plugin,
+        productDatasource: ProductDatasource,
         startTime: LocalDateTime,
         finishTime: LocalDateTime
     ) {
-        var finishedState = PluginState(runId, plugin.getNane(), PluginStatus.IDLE, LocalDateTime.now())
-        pluginStateProvider.saveState(finishedState)
-        pluginStateProvider.saveLog(plugin.getNane(), runId, startTime, finishTime)
+        var finishedState = ProductDatasourceState(runId, productDatasource.getNane(), ProductDatasourceStatus.IDLE, LocalDateTime.now())
+        productDatasourceStateProvider.saveState(finishedState)
+        productDatasourceStateProvider.saveLog(productDatasource.getNane(), runId, startTime, finishTime)
     }
 
-    private fun setRunningState(runId: Int, plugin: Plugin) {
-        var pluginState = PluginState(runId, plugin.getNane(), PluginStatus.RUNNING, LocalDateTime.now())
-        pluginStateProvider.saveState(pluginState)
+    private fun setRunningState(runId: Int, productDatasource: ProductDatasource) {
+        var productDatasourceState = ProductDatasourceState(runId, productDatasource.getNane(), ProductDatasourceStatus.RUNNING, LocalDateTime.now())
+        productDatasourceStateProvider.saveState(productDatasourceState)
     }
 
-    private fun setFailedState(state: PluginState, plugin: Plugin) {
-        var finishedState = PluginState(state.id + 1, plugin.getNane(), PluginStatus.FAILED, LocalDateTime.now())
-        pluginStateProvider.saveState(finishedState)
+    private fun setFailedState(state: ProductDatasourceState, productDatasource: ProductDatasource) {
+        var finishedState = ProductDatasourceState(state.id + 1, productDatasource.getNane(), ProductDatasourceStatus.FAILED, LocalDateTime.now())
+        productDatasourceStateProvider.saveState(finishedState)
     }
 
-    private fun needToRun(state: PluginState): Boolean {
-        if (state.status == PluginStatus.FAILED) {
+    private fun needToRun(state: ProductDatasourceState): Boolean {
+        if (state.status == ProductDatasourceStatus.FAILED) {
             return true
         }
         val diffInSeconds = Duration.between(state.lastRun, LocalDateTime.now()).get(ChronoUnit.SECONDS)

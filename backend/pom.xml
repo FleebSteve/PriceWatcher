@@ -23,7 +23,7 @@
         <module>API</module>
         <module>Application</module>
         <module>Store</module>
-        <module>PluginAPI</module>
+        <module>ProductDatasource</module>
         <module>Data</module>
     </modules>
 

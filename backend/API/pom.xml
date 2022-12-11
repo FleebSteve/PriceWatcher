@@ -27,11 +27,6 @@
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.flbstv</groupId>
-            <artifactId>PluginAPI</artifactId>
-            <version>${project.version}</version>
-        </dependency>
     </dependencies>
 
 </project>
