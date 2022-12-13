@@ -8,12 +8,11 @@ import org.springframework.stereotype.Service
 @Service
 class ProductDatasourceServiceImpl(val productDatasourceList: List<ProductDatasource>) : ProductDatasourceService {
 
-    lateinit var productDatasourceMap: MutableMap<String, ProductDatasource>
+    var productDatasourceMap: MutableMap<String, ProductDatasource> = HashMap()
 
 
     @PostConstruct
     fun init() {
-        productDatasourceMap = HashMap()
         productDatasourceList.forEach { productDatasourceMap[it.getNane()] = it }
 
     }

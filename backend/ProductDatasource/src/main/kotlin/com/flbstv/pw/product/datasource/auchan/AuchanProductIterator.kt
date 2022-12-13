@@ -142,7 +142,7 @@ class AuchanProductIterator : Iterator<Product> {
 
     private fun getHttpEntity(): HttpEntity<Void> {
         val headers = HttpHeaders()
-        headers["authorization"] = "Bearer $jwtToken"
+        headers.setBearerAuth(jwtToken)
         return HttpEntity(headers)
     }
 
@@ -157,7 +157,7 @@ class AuchanProductIterator : Iterator<Product> {
                 headerValues.stream()
                     .filter { it.startsWith("access_token=") }
                     .map { it.replace("access_token=", "") }
-                    .findFirst().get()
+                    .findFirst().get().split(";")[0]
             logger.info("Got JWT token")
             logger.debug(jwtToken)
             return jwtToken
