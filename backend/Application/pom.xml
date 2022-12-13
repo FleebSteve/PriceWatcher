@@ -73,6 +73,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.flbstv</groupId>
+            <artifactId>ProductDatasource</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
         </dependency>

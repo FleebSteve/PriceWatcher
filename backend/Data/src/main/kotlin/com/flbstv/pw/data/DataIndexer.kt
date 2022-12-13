@@ -6,7 +6,7 @@ import co.elastic.clients.transport.ElasticsearchTransport
 import co.elastic.clients.transport.rest_client.RestClientTransport
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.flbstv.pw.api.const.KafkaTopics
-import com.flbstv.pw.plugin.api.model.Product
+import com.flbstv.pw.api.data.Product
 import jakarta.annotation.PostConstruct
 import org.apache.http.HttpHost
 import org.elasticsearch.client.RestClient
