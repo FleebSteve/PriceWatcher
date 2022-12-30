@@ -47,6 +47,14 @@ class DataIndexer(private val objectMapper: ObjectMapper) {
 
     @KafkaListener(topics = [KafkaTopics.PRODUCT_STREAM], groupId = "product.data.indexer")
     fun consumeProductStream(message: String) {
+        try {
+            doConsume(message)
+        }catch (e: Exception) {
+            logger.error("Failed to consume message: $message", e)
+        }
+    }
+
+    private fun doConsume(message: String) {
         val product = objectMapper.readValue(message, Product::class.java)
         client.index { i ->
             i
