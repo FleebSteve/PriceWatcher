@@ -27,6 +27,7 @@ class ProductConsumerImpl(
     }
 
     override fun replay(product: Product) {
+        logger.info("Replaying: ${product.source}/${product.id} ${product.date}")
         logger.debug("Replaying: $product")
         sendProductMessage(product)
         logger.debug("Replayed: $product")
