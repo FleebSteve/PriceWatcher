@@ -68,6 +68,7 @@ class AldiProductIterator : Iterator<Product> {
         return Product(
             SOURCE_NAME,
             VERSION,
+            Date(),
             productId.toString(),
             productPropertyMap["ProductName"] as String,
             productPropertyMap["ProductName"] as String,

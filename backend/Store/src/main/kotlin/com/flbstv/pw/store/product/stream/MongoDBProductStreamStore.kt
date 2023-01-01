@@ -6,14 +6,12 @@ import org.bson.types.ObjectId
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
-import java.util.*
 import java.util.stream.Stream
-import java.util.stream.StreamSupport
 
 @Service
 class MongoDBProductStreamStore(private val repository: ProductStreamRepository) : ProductStore {
 
-    var logger: Logger =  LoggerFactory.getLogger(MongoDBProductStreamStore::class.java)
+    var logger: Logger = LoggerFactory.getLogger(MongoDBProductStreamStore::class.java)
 
     override fun store(id: Int, product: Product) {
         logger.debug("Consuming: {}/{}", product.source, product.id)
@@ -23,7 +21,7 @@ class MongoDBProductStreamStore(private val repository: ProductStreamRepository)
             product.source,
             product.version,
             product.id,
-            Date(),
+            product.date,
             product.name,
             product.description,
             product.price,
@@ -34,16 +32,19 @@ class MongoDBProductStreamStore(private val repository: ProductStreamRepository)
     }
 
     override fun findAll(): Stream<Product> {
-        return StreamSupport.stream(repository.findAll().spliterator(), false).map { toProduct(it) }
+        return repository.findAllByOrderByDate().map { toProduct(it) }
     }
 
     private fun toProduct(productStream: ProductStream): Product {
-        return Product(productStream.source,
-        productStream.version,
-        productStream.productId,
-        productStream.name,
-        productStream.description,
-        productStream.price,
-        productStream.raw)
+        return Product(
+            productStream.source,
+            productStream.version,
+            productStream.date,
+            productStream.productId,
+            productStream.name,
+            productStream.description,
+            productStream.price,
+            productStream.raw
+        )
     }
 }

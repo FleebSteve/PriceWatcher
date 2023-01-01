@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory
 import java.net.InetSocketAddress
 import java.net.Proxy
 import java.net.SocketException
+import java.util.*
 import kotlin.math.ceil
 
 private const val SOURCE_NAME = "TESCO"
@@ -93,6 +94,7 @@ class TescoProductIterator(private val proxyHost: String, private val proxyPort:
         return Product(
             SOURCE_NAME,
             VERSION,
+            Date(),
             title,
             title,
             safeGet("shortDescription", productPropertyMap) as String,
