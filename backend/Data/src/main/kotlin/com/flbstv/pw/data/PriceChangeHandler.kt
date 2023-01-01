@@ -40,7 +40,7 @@ class PriceChangeHandler(
             productPriceChangeStore.addPriceChange(productPriceChange)
         } else {
             val lastPriceChangeValue = lastPriceChange.get()
-            if (lastPriceChangeValue.lastKnownPrice != product.price) {
+            if (lastPriceChangeValue.lastKnownPrice != product.price && product.date.after(lastPriceChangeValue.date)) {
                 val productPriceChange = ProductPriceChange(
                     product.source,
                     product.id,
