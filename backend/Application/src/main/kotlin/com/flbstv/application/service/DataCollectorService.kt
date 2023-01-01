@@ -3,10 +3,7 @@ package com.flbstv.application.service
 import com.flbstv.pw.api.const.ProductDatasourceStatus
 import com.flbstv.pw.api.data.NULL_OBJECT
 import com.flbstv.pw.api.data.ProductDatasourceState
-import com.flbstv.pw.api.service.ProductConsumer
-import com.flbstv.pw.api.service.ProductDatasource
-import com.flbstv.pw.api.service.ProductDatasourceService
-import com.flbstv.pw.api.service.ProductDatasourceStateProvider
+import com.flbstv.pw.api.service.*
 import jakarta.annotation.PostConstruct
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -20,7 +17,8 @@ import java.time.temporal.ChronoUnit
 class DataCollectorService(
     private val productDatasourceService: ProductDatasourceService,
     private val productDatasourceStateProvider: ProductDatasourceStateProvider,
-    private val productConsumer: ProductConsumer
+    private val productConsumer: ProductConsumer,
+    private val dataReplayService: DataReplayService
 ) {
 
     var logger: Logger = LoggerFactory.getLogger(DataCollectorService::class.java)
@@ -34,6 +32,10 @@ class DataCollectorService(
 
     @Scheduled(cron = "0 0 0/1 * * ?")
     fun run() {
+        if (dataReplayService.isRunning()) {
+            logger.info("DataReplay in progress, skipping datasource check")
+            return
+        }
         logger.info("Check datasources")
         for (productDatasource in productDatasourceService.productDatasourceList()) {
             logger.info("Checking: {}", productDatasource.getNane())
@@ -70,18 +72,33 @@ class DataCollectorService(
         startTime: LocalDateTime,
         finishTime: LocalDateTime
     ) {
-        var finishedState = ProductDatasourceState(runId, productDatasource.getNane(), ProductDatasourceStatus.IDLE, LocalDateTime.now())
+        var finishedState = ProductDatasourceState(
+            runId,
+            productDatasource.getNane(),
+            ProductDatasourceStatus.IDLE,
+            LocalDateTime.now()
+        )
         productDatasourceStateProvider.saveState(finishedState)
         productDatasourceStateProvider.saveLog(productDatasource.getNane(), runId, startTime, finishTime)
     }
 
     private fun setRunningState(runId: Int, productDatasource: ProductDatasource) {
-        var productDatasourceState = ProductDatasourceState(runId, productDatasource.getNane(), ProductDatasourceStatus.RUNNING, LocalDateTime.now())
+        var productDatasourceState = ProductDatasourceState(
+            runId,
+            productDatasource.getNane(),
+            ProductDatasourceStatus.RUNNING,
+            LocalDateTime.now()
+        )
         productDatasourceStateProvider.saveState(productDatasourceState)
     }
 
     private fun setFailedState(state: ProductDatasourceState, productDatasource: ProductDatasource) {
-        var finishedState = ProductDatasourceState(state.id + 1, productDatasource.getNane(), ProductDatasourceStatus.FAILED, LocalDateTime.now())
+        var finishedState = ProductDatasourceState(
+            state.id + 1,
+            productDatasource.getNane(),
+            ProductDatasourceStatus.FAILED,
+            LocalDateTime.now()
+        )
         productDatasourceStateProvider.saveState(finishedState)
     }
 

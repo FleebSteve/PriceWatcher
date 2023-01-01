@@ -22,13 +22,17 @@ class ProductConsumerImpl(
     override fun consume(id: Int, product: Product) {
         logger.debug("Consuming: $product")
         productStore.store(id, product)
-        kafkaTemplate.send(KafkaTopics.PRODUCT_STREAM, objectMapper.writeValueAsString(product))
+        sendProductMessage(product)
         logger.debug("Consumed: $product")
     }
 
     override fun replay(product: Product) {
         logger.debug("Replaying: $product")
-        kafkaTemplate.send(KafkaTopics.PRODUCT_STREAM, objectMapper.writeValueAsString(product))
+        sendProductMessage(product)
         logger.debug("Replayed: $product")
+    }
+
+    private fun sendProductMessage(product: Product) {
+        kafkaTemplate.send(KafkaTopics.PRODUCT_STREAM, objectMapper.writeValueAsString(product))
     }
 }

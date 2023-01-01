@@ -10,6 +10,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.web.client.RestTemplate
 import java.math.BigDecimal
+import java.util.*
 
 private const val SOURCE_NAME = "SPAR"
 private const val VERSION = 1
@@ -59,6 +60,7 @@ class SparProductIterator : Iterator<Product> {
         return Product(
             SOURCE_NAME,
             VERSION,
+            Date(),
             title,
             title,
             title,
