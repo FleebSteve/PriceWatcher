@@ -10,7 +10,7 @@ class MongoDBProductPriceChangeStore(private val productPriceChangeRepository: P
     ProductPriceChangeStore {
     override fun getLastPriceChange(source: String, id: String): Optional<ProductPriceChange> {
         val productPriceChangeDocument =
-            productPriceChangeRepository.findFirstBySourceAndProductIdOrderByDate(source, id)
+            productPriceChangeRepository.findFirstBySourceAndProductIdOrderByDateDesc(source, id)
                 ?: return Optional.empty()
         return Optional.of(productPriceChangeDocument.toModel())
     }

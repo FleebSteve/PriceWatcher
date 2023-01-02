@@ -9,5 +9,5 @@ interface ProductPriceChangeRepository : MongoRepository<ProductPriceChangeDocum
 
     fun findBySourceAndProductId(source: String, productId: String): List<ProductPriceChangeDocument>
 
-    fun findFirstBySourceAndProductIdOrderByDate(source: String, productId: String): ProductPriceChangeDocument?
+    fun findFirstBySourceAndProductIdOrderByDateDesc(source: String, productId: String): ProductPriceChangeDocument?
 }
