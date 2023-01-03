@@ -7,6 +7,7 @@ import co.elastic.clients.transport.rest_client.RestClientTransport
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.flbstv.pw.api.const.KafkaTopics
 import com.flbstv.pw.api.data.Product
+import com.flbstv.pw.ext.limit
 import jakarta.annotation.PostConstruct
 import org.apache.http.HttpHost
 import org.elasticsearch.client.RestClient
@@ -59,7 +60,7 @@ class DataIndexer(private val objectMapper: ObjectMapper) {
         client.index { i ->
             i
                 .index(product.source.lowercase())
-                .id(product.id)
+                .id(product.id.limit(512))
                 .document(product)
         }
     }
