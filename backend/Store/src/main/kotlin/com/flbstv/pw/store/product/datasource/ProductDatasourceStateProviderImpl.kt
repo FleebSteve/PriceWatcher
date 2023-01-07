@@ -34,9 +34,10 @@ class ProductDatasourceStateProviderImpl(
         name: String,
         runId: Int,
         startTime: LocalDateTime,
-        finishTime: LocalDateTime
+        finishTime: LocalDateTime,
+        collectedProductCount: Int
     ) {
-        var productDatasourceRunLog = ProductDatasourceRunLog(ObjectId(), name, runId, startTime, finishTime)
+        var productDatasourceRunLog = ProductDatasourceRunLog(ObjectId(), name, runId, startTime, finishTime, collectedProductCount)
         productDatasourceRunLogRepository.save(productDatasourceRunLog)
     }
 
