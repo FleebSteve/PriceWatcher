@@ -57,20 +57,23 @@ class DataCollectorService(
     }
 
     private fun doRun(state: ProductDatasourceState, productDatasource: ProductDatasource) {
-        var startTime = LocalDateTime.now()
-        var runId = state.id + 1;
+        val startTime = LocalDateTime.now()
+        val runId = state.id + 1
+        var collectedProductCount = 0
         setRunningState(runId, productDatasource)
         productDatasource.productProvider().getProducts().filter { it != NULL_OBJECT }
-            .forEach { productConsumer.consume(runId, it) }
-        var finishTime = LocalDateTime.now()
-        setFinishedState(runId, productDatasource, startTime, finishTime)
+            .forEach {
+                productConsumer.consume(runId, it)
+                collectedProductCount++
+            }
+        val finishTime = LocalDateTime.now()
+        setFinishedState(runId, productDatasource)
+        productDatasourceStateProvider.saveLog(productDatasource.getNane(), runId, startTime, finishTime, collectedProductCount)
     }
 
     private fun setFinishedState(
         runId: Int,
         productDatasource: ProductDatasource,
-        startTime: LocalDateTime,
-        finishTime: LocalDateTime
     ) {
         var finishedState = ProductDatasourceState(
             runId,
@@ -79,7 +82,6 @@ class DataCollectorService(
             LocalDateTime.now()
         )
         productDatasourceStateProvider.saveState(finishedState)
-        productDatasourceStateProvider.saveLog(productDatasource.getNane(), runId, startTime, finishTime)
     }
 
     private fun setRunningState(runId: Int, productDatasource: ProductDatasource) {

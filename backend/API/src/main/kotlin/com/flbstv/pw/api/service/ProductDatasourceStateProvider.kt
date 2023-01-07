@@ -8,5 +8,5 @@ interface ProductDatasourceStateProvider {
     fun saveState(productDatasource: ProductDatasourceState)
     fun updateState(productDatasource: ProductDatasourceState)
 
-    fun saveLog(name: String, runId: Int, startTime: LocalDateTime, finishTime: LocalDateTime)
+    fun saveLog(name: String, runId: Int, startTime: LocalDateTime, finishTime: LocalDateTime, collectedProductCount: Int)
 }
