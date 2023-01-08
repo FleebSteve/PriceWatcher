@@ -47,7 +47,7 @@ class PriceChangeHandler(
                     product.date,
                     product.name,
                     product.price,
-                    lastPriceChangeValue.lastKnownPrice,
+                    lastPriceChangeValue.currentPrice,
                     lastPriceChangeValue.firstKnownPrice,
                     product.price - lastPriceChangeValue.lastKnownPrice,
                     product.price - lastPriceChangeValue.firstKnownPrice,
