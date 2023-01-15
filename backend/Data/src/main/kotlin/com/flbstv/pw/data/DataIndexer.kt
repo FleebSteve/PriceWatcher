@@ -7,6 +7,8 @@ import co.elastic.clients.transport.rest_client.RestClientTransport
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.flbstv.pw.api.const.KafkaTopics
 import com.flbstv.pw.api.data.Product
+import com.flbstv.pw.api.data.ProductInfo
+import com.flbstv.pw.api.service.ProductSearchService
 import com.flbstv.pw.ext.limit
 import jakarta.annotation.PostConstruct
 import org.apache.http.HttpHost
@@ -19,7 +21,7 @@ import org.springframework.stereotype.Service
 
 
 @Service
-class DataIndexer(private val objectMapper: ObjectMapper) {
+class DataIndexer(private val objectMapper: ObjectMapper): ProductSearchService {
 
     private var logger: Logger = LoggerFactory.getLogger(DataIndexer::class.java)
 
@@ -30,6 +32,10 @@ class DataIndexer(private val objectMapper: ObjectMapper) {
     private var elasticsearchPort: Int = 0
 
     private lateinit var client: ElasticsearchClient
+
+    companion object {
+        const val PRODUCT_INFO_INDEX = "product_index"
+    }
 
     @PostConstruct
     fun init() {
@@ -43,6 +49,10 @@ class DataIndexer(private val objectMapper: ObjectMapper) {
         )
 
         client = ElasticsearchClient(transport)
+    }
+
+    override fun search(searchTerm: String): List<ProductInfo> {
+        TODO("Not yet implemented")
     }
 
 
@@ -63,5 +73,14 @@ class DataIndexer(private val objectMapper: ObjectMapper) {
                 .id(product.id.limit(512))
                 .document(product)
         }
+        val productInfo = product.toProductInfo()
+        client.index { i ->
+            i
+                .index(PRODUCT_INFO_INDEX)
+                .id(productInfo.uniqueId().limit(512))
+                .document(productInfo)
+        }
     }
+
+
 }
