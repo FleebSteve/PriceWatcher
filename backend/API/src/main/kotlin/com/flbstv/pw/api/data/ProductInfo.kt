@@ -1,11 +1,13 @@
 package com.flbstv.pw.api.data
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 data class ProductInfo(
-    val source: String,
-    val id: String,
-    val name: String,
-    val description: String,
-    val price: Double
+    @JsonProperty("source")  val source: String,
+    @JsonProperty("id")  val id: String,
+    @JsonProperty("name") val name: String,
+    @JsonProperty("description") val description: String,
+    @JsonProperty("price")  val price: Double
 )
 {
     fun uniqueId(): String = "${source}_${id}"
