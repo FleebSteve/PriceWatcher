@@ -15,12 +15,13 @@ data class Product(
     val price: Double,
     val raw: Map<String, Any>
 ) {
-    fun toProductInfo(): ProductInfo =
+    fun toProductInfo(imageFileName: String): ProductInfo =
         ProductInfo(
             source,
             id,
             name,
             description,
-            price
+            price,
+            imageFileName
         )
 }
