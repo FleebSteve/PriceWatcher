@@ -1,5 +1,6 @@
 package com.flbstv.application.controller
 
+import com.flbstv.pw.api.const.ProductOrder
 import com.flbstv.pw.api.data.ProductInfo
 import com.flbstv.pw.api.service.ProductSearchService
 import org.springframework.web.bind.annotation.GetMapping
@@ -13,7 +14,7 @@ class SearchController(private val productSearchService: ProductSearchService) {
 
     @GetMapping
     fun query(@RequestParam("query") query: String, @RequestParam("orderBy") orderBy: String): List<ProductInfo> {
-        return productSearchService.search(query)
+        return productSearchService.search(query, ProductOrder.crate(orderBy))
     }
 
     @GetMapping("suggest")

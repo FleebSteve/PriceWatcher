@@ -8,7 +8,7 @@ data class ProductInfo(
     @JsonProperty("name") val name: String,
     @JsonProperty("description") val description: String,
     @JsonProperty("price")  val price: Double,
-    @JsonProperty("image")  val image: String
+    @JsonProperty("image")  val image: String?
 )
 {
     fun uniqueId(): String = "${source}_${id}"
