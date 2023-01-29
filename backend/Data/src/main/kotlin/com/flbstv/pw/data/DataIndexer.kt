@@ -23,7 +23,7 @@ import org.springframework.stereotype.Service
 
 
 @Service
-class DataIndexer(private val objectMapper: ObjectMapper): ProductSearchService {
+class DataIndexer(private val imageFilenameResolver: ImageFilenameResolver, private val objectMapper: ObjectMapper): ProductSearchService {
 
     private var logger: Logger = LoggerFactory.getLogger(DataIndexer::class.java)
 
@@ -96,7 +96,7 @@ class DataIndexer(private val objectMapper: ObjectMapper): ProductSearchService 
                 .id(product.id.limit(512))
                 .document(product)
         }
-        val productInfo = product.toProductInfo()
+        val productInfo = product.toProductInfo(imageFilenameResolver.getImageUrl(product))
         client.index { i ->
             i
                 .index(PRODUCT_INFO_INDEX)
