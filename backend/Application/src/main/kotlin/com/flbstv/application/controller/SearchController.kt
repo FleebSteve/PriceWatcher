@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/product/search")
 class SearchController(private val productSearchService: ProductSearchService) {
 
-    @GetMapping("query")
-    fun query(@RequestParam("query") query: String): List<ProductInfo> {
+    @GetMapping
+    fun query(@RequestParam("query") query: String, @RequestParam("order_by") orderBy: String): List<ProductInfo> {
         return productSearchService.search(query)
     }
 

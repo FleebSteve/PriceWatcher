@@ -63,24 +63,13 @@ class DataIndexer(private val objectMapper: ObjectMapper): ProductSearchService 
         ).hits().hits().mapNotNull { it.source() }.toList()
     }
 
-    private fun querySearchBuilder(
-        searchRequestBuilder: SearchRequest.Builder,
-        searchTerm: String
-    ): SearchRequest.Builder? = searchRequestBuilder.index(PRODUCT_INFO_INDEX)
-        .query { objectBuilder ->
-            objectBuilder.queryString { qsq ->
-                qsq.query(searchTerm)
-                    .fields("name^2", "description")
-            }
-        }
-
     override fun suggest(searchTerm: String): List<String> {
        return client.search({
                searchRequestBuilder ->
                 suggestSearchBuilder(searchRequestBuilder, searchTerm)
             },
             ProductInfo::class.java
-        ).suggest()["simple_phrase"]
+        ).suggest()[SUGGEST_NAME]
            ?.stream()
            ?.map { it.phrase() }
            ?.flatMap { it.options().stream() }
@@ -115,6 +104,17 @@ class DataIndexer(private val objectMapper: ObjectMapper): ProductSearchService 
                 .document(productInfo)
         }
     }
+
+    private fun querySearchBuilder(
+        searchRequestBuilder: SearchRequest.Builder,
+        searchTerm: String
+    ): SearchRequest.Builder? = searchRequestBuilder.index(PRODUCT_INFO_INDEX)
+        .query { objectBuilder ->
+            objectBuilder.queryString { qsq ->
+                qsq.query(searchTerm)
+                    .fields("name^2", "description")
+            }
+        }
 
     private fun suggestSearchBuilder(
         searchRequestBuilder: SearchRequest.Builder,
