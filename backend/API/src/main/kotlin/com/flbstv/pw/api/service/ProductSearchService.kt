@@ -5,7 +5,7 @@ import com.flbstv.pw.api.data.ProductInfo
 
 interface ProductSearchService {
 
-    fun search(searchTerm: String, order: ProductOrder): List<ProductInfo>
+    fun search(searchTerm: String, order: ProductOrder, source: String): List<ProductInfo>
 
     fun suggest(searchTerm: String): List<String>
 

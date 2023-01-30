@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController
 class SearchController(private val productSearchService: ProductSearchService) {
 
     @GetMapping
-    fun query(@RequestParam("query") query: String, @RequestParam("orderBy") orderBy: String): List<ProductInfo> {
-        return productSearchService.search(query, ProductOrder.crate(orderBy))
+    fun query(@RequestParam("query") query: String, @RequestParam("orderBy") orderBy: String, @RequestParam("source") source: String): List<ProductInfo> {
+        return productSearchService.search(query, ProductOrder.crate(orderBy), source)
     }
 
     @GetMapping("suggest")
