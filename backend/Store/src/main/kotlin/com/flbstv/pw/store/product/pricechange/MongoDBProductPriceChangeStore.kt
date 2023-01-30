@@ -1,5 +1,6 @@
 package com.flbstv.pw.store.product.pricechange
 
+import com.flbstv.pw.api.data.PricePoint
 import com.flbstv.pw.api.data.ProductPriceChange
 import com.flbstv.pw.api.service.ProductPriceChangeStore
 import org.springframework.stereotype.Service
@@ -21,5 +22,11 @@ class MongoDBProductPriceChangeStore(private val productPriceChangeRepository: P
 
     override fun addPriceChange(productPriceChange: ProductPriceChange) {
         productPriceChangeRepository.save(ProductPriceChangeDocument.fromModel(productPriceChange))
+    }
+
+    override fun getPricePoints(id: String): Map<String, List<PricePoint>> {
+        return productPriceChangeRepository.findByProductIdOrderByDate(id)
+            .groupBy(ProductPriceChangeDocument::source)
+            .mapValues { entry -> entry.value.map { PricePoint(it.currentPrice, it.date) } }
     }
 }
