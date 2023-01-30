@@ -135,6 +135,8 @@ class DataIndexer(private val imageFilenameResolver: ImageFilenameResolver, priv
                             .fields("name^2", "description")
                             .defaultOperator(Operator.And)
                     }
+                }
+                boolQueryBuilder.must { queryBuilder ->
                     queryBuilder.queryString { qsq ->
                         qsq.query(source)
                             .fields("source")
