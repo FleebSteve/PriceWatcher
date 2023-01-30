@@ -3,6 +3,7 @@ package com.flbstv.pw.data
 import co.elastic.clients.elasticsearch.ElasticsearchClient
 import co.elastic.clients.elasticsearch._types.SortOrder
 import co.elastic.clients.elasticsearch._types.SuggestMode
+import co.elastic.clients.elasticsearch._types.query_dsl.Operator
 import co.elastic.clients.elasticsearch.core.SearchRequest
 import co.elastic.clients.json.jackson.JacksonJsonpMapper
 import co.elastic.clients.transport.ElasticsearchTransport
@@ -57,11 +58,11 @@ class DataIndexer(private val imageFilenameResolver: ImageFilenameResolver, priv
         client = ElasticsearchClient(transport)
     }
 
-    override fun search(searchTerm: String, order: ProductOrder): List<ProductInfo> {
+    override fun search(searchTerm: String, order: ProductOrder, source: String): List<ProductInfo> {
         return client.search(
             { searchRequestBuilder ->
                 sort(searchRequestBuilder, order)
-                querySearchBuilder(searchRequestBuilder, searchTerm)
+                querySearchBuilder(searchRequestBuilder, searchTerm, source)
             },
             ProductInfo::class.java
         ).hits().hits().mapNotNull { it.source() }.toList()
@@ -123,13 +124,25 @@ class DataIndexer(private val imageFilenameResolver: ImageFilenameResolver, priv
 
     private fun querySearchBuilder(
         searchRequestBuilder: SearchRequest.Builder,
-        searchTerm: String
+        searchTerm: String,
+        source: String
     ): SearchRequest.Builder? = searchRequestBuilder.index(PRODUCT_INFO_INDEX)
         .query { objectBuilder ->
-            objectBuilder.queryString { qsq ->
-                qsq.query(searchTerm)
-                    .fields("name^2", "description")
+            objectBuilder.bool { boolQueryBuilder ->
+                boolQueryBuilder.must { queryBuilder ->
+                    queryBuilder.queryString { qsq ->
+                        qsq.query(searchTerm)
+                            .fields("name^2", "description")
+                            .defaultOperator(Operator.And)
+                    }
+                    queryBuilder.queryString { qsq ->
+                        qsq.query(source)
+                            .fields("source")
+                            .defaultOperator(Operator.And)
+                    }
+                }
             }
+
         }
 
     private fun suggestSearchBuilder(
