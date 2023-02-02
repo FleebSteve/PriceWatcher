@@ -13,7 +13,7 @@ class ProductIdentityMatcher(
     private val objectMapper: ObjectMapper
 ) {
 
-    @KafkaListener(topics = [KafkaTopics.PRODUCT_STREAM], groupId = "product.matcher")
+    @KafkaListener(topics = [KafkaTopics.PRODUCT_STREAM], groupId = "product.matcher.alpha")
     fun consumeProductStream(message: String) {
         val product = objectMapper.readValue(message, Product::class.java)
         productIdentifierService.add(product.name, product.source, product.id)
