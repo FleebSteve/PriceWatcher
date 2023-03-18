@@ -120,10 +120,11 @@ class AldiProductIterator : Iterator<Product> {
             "SetUserSelectedShopsOnFirstSiteLoad" to true,
             "RedirectToDashboardNeeded" to false,
             "ShopsSelectedForRoot" to "aldi",
+            "BrandProviderSelectedForRoot" to null,í
             "UserSelectedShops" to emptyList<String>()
         )
-
-        val response = restTemplate.postForEntity(url, data, String::class.java)
+        val httpEntity = HttpEntity(data, getBaseHeaders())
+        val response = restTemplate.postForEntity(url, httpEntity, String::class.java)
         val jwtToken = response.headers["JWT-Auth"]?.get(0) ?: ""
         logger.info("Got JWT token")
         logger.debug(jwtToken)
@@ -156,5 +157,11 @@ class AldiProductIterator : Iterator<Product> {
         val headers = HttpHeaders()
         headers["Authorization"] = "Bearer $jwtToken"
         return HttpEntity(body, headers)
+    }
+
+    private fun getBaseHeaders(): HttpHeaders {
+        return HttpHeaders().apply{
+            this["user-agent"] = " Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Mobile Safari/537.36"
+        }
     }
 }
