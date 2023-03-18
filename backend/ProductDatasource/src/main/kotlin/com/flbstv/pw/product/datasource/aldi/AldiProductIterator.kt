@@ -12,6 +12,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.ResponseEntity
 import org.springframework.http.client.ClientHttpRequestFactory
 import org.springframework.http.client.SimpleClientHttpRequestFactory
+import org.springframework.web.client.ResourceAccessException
 import org.springframework.web.client.RestTemplate
 import java.math.BigDecimal
 import java.net.InetSocketAddress
@@ -154,16 +155,18 @@ class AldiProductIterator(private val proxyHost: String, private val proxyPort: 
     private fun responseEntity(
         url: String,
         httpEntity: HttpEntity<Map<String, Any>>
-    ) : ResponseEntity<String> {
+    ): ResponseEntity<String> {
 
         for (i in 1..10) {
             try {
-                Thread.sleep(15000)
+                Thread.sleep(5000)
                 System.setProperty("socksProxyVersion", "4")
                 return restTemplate.postForEntity(url, httpEntity, String::class.java)
             } catch (e: HttpStatusException) {
             } catch (e: SocketException) {
+            } catch (e: ResourceAccessException) {
             }
+
         }
         throw Exception("Could't get contet")
     }
@@ -185,8 +188,9 @@ class AldiProductIterator(private val proxyHost: String, private val proxyPort: 
     }
 
     private fun getBaseHeaders(): HttpHeaders {
-        return HttpHeaders().apply{
-            this["user-agent"] = " Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Mobile Safari/537.36"
+        return HttpHeaders().apply {
+            this["user-agent"] =
+                " Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Mobile Safari/537.36"
         }
     }
 
