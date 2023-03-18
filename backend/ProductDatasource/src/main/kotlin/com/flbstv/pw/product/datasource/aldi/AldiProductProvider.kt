@@ -6,10 +6,10 @@ import java.util.*
 import java.util.stream.Stream
 import java.util.stream.StreamSupport
 
-class AldiProductProvider : ProductProvider {
+class AldiProductProvider(private val proxyHost: String, private val proxyPort: Int) : ProductProvider {
 
     override fun getProducts(): Stream<Product> {
-        var iterator = AldiProductIterator()
+        var iterator = AldiProductIterator(proxyHost, proxyPort)
         return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, Spliterator.DISTINCT), false)
     }
 
