@@ -120,7 +120,7 @@ class AldiProductIterator : Iterator<Product> {
             "SetUserSelectedShopsOnFirstSiteLoad" to true,
             "RedirectToDashboardNeeded" to false,
             "ShopsSelectedForRoot" to "aldi",
-            "BrandProviderSelectedForRoot" to null,í
+            "BrandProviderSelectedForRoot" to null,
             "UserSelectedShops" to emptyList<String>()
         )
         val httpEntity = HttpEntity(data, getBaseHeaders())
