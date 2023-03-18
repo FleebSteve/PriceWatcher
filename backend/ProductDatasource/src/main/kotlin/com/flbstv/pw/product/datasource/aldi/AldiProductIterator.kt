@@ -8,16 +8,21 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
+import org.springframework.http.client.ClientHttpRequestFactory
+import org.springframework.http.client.SimpleClientHttpRequestFactory
 import org.springframework.web.client.RestTemplate
 import java.math.BigDecimal
+import java.net.InetSocketAddress
+import java.net.Proxy
 import java.util.*
 import java.util.stream.StreamSupport
+
 
 private const val SOURCE_NAME = "ALDI"
 private const val VERSION = 1
 private const val BASE_URL = "https://shopservice.roksh.com"
 
-class AldiProductIterator : Iterator<Product> {
+class AldiProductIterator(private val proxyHost: String, private val proxyPort: Int) : Iterator<Product> {
     private val jwtToken: String
     private val categoryIds: List<String>
     private val categoryIdIterator: Iterator<String>
@@ -26,7 +31,7 @@ class AldiProductIterator : Iterator<Product> {
     private var currentCategory = ""
     private var categoryPages = 0
     private var currentCategoryPage = 1
-    private val restTemplate: RestTemplate = RestTemplate()
+    private val restTemplate: RestTemplate = RestTemplate(clientHttpRequestFactory())
 
 
     var logger: Logger = LoggerFactory.getLogger(AldiProductIterator::class.java)
@@ -99,6 +104,7 @@ class AldiProductIterator : Iterator<Product> {
     }
 
     private fun nextCategoryElements() {
+        Thread.sleep(15000)
         val url = "$BASE_URL/productlist/GetProductList"
         val data = mapOf("Page" to currentCategoryPage, "CategoryProgId" to currentCategory)
         logger.info("Getting {} {}", url, data)
@@ -162,6 +168,16 @@ class AldiProductIterator : Iterator<Product> {
     private fun getBaseHeaders(): HttpHeaders {
         return HttpHeaders().apply{
             this["user-agent"] = " Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Mobile Safari/537.36"
+        }
+    }
+
+    private fun clientHttpRequestFactory(): ClientHttpRequestFactory {
+        val proxy = Proxy(
+            Proxy.Type.SOCKS,
+            InetSocketAddress.createUnresolved(proxyHost, proxyPort)
+        )
+        return SimpleClientHttpRequestFactory().apply {
+            setProxy(proxy)
         }
     }
 }
