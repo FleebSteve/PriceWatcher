@@ -4,16 +4,19 @@ import com.flbstv.pw.api.data.NULL_OBJECT
 import com.flbstv.pw.api.data.Product
 import org.json.JSONArray
 import org.json.JSONObject
+import org.jsoup.HttpStatusException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
+import org.springframework.http.ResponseEntity
 import org.springframework.http.client.ClientHttpRequestFactory
 import org.springframework.http.client.SimpleClientHttpRequestFactory
 import org.springframework.web.client.RestTemplate
 import java.math.BigDecimal
 import java.net.InetSocketAddress
 import java.net.Proxy
+import java.net.SocketException
 import java.util.*
 import java.util.stream.StreamSupport
 
@@ -104,12 +107,11 @@ class AldiProductIterator(private val proxyHost: String, private val proxyPort: 
     }
 
     private fun nextCategoryElements() {
-        Thread.sleep(15000)
         val url = "$BASE_URL/productlist/GetProductList"
         val data = mapOf("Page" to currentCategoryPage, "CategoryProgId" to currentCategory)
         logger.info("Getting {} {}", url, data)
         val httpEntity = getHttpEntity(data)
-        val response = restTemplate.postForEntity(url, httpEntity, String::class.java)
+        val response = responseEntity(url, httpEntity)
         val responseObject = JSONObject(response.body)
         val productList = responseObject.get("ProductList") as JSONArray
         categoryPages = responseObject.get("TotalPages") as Int
@@ -147,6 +149,22 @@ class AldiProductIterator(private val proxyHost: String, private val proxyPort: 
             .filter { (it as JSONObject).get("Status") as String == "y" }
             .map { getChildCategories(it as JSONObject) }.toList().flatten()
 
+    }
+
+    private fun responseEntity(
+        url: String,
+        httpEntity: HttpEntity<Map<String, Any>>
+    ) : ResponseEntity<String> {
+
+        for (i in 1..10) {
+            try {
+                Thread.sleep(15000)
+                return restTemplate.postForEntity(url, httpEntity, String::class.java)
+            } catch (e: HttpStatusException) {
+            } catch (e: SocketException) {
+            }
+        }
+        throw Exception("Could't get contet")
     }
 
     private fun getChildCategories(jsonObject: JSONObject): List<String> {
