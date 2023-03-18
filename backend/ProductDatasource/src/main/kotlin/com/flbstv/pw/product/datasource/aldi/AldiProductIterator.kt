@@ -172,6 +172,7 @@ class AldiProductIterator(private val proxyHost: String, private val proxyPort: 
     }
 
     private fun clientHttpRequestFactory(): ClientHttpRequestFactory {
+        System.setProperty("socksProxyVersion", "4")
         val proxy = Proxy(
             Proxy.Type.SOCKS,
             InetSocketAddress.createUnresolved(proxyHost, proxyPort)
