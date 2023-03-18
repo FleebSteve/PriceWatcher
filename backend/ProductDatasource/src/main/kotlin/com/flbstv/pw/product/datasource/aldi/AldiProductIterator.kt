@@ -15,7 +15,7 @@ import java.util.stream.StreamSupport
 
 private const val SOURCE_NAME = "ALDI"
 private const val VERSION = 1
-private const val BASE_URL = "https://weshopapp-roksh-shopservice.azurewebsites.net"
+private const val BASE_URL = "https://shopservice.roksh.com"
 
 class AldiProductIterator : Iterator<Product> {
     private val jwtToken: String
