@@ -159,6 +159,7 @@ class AldiProductIterator(private val proxyHost: String, private val proxyPort: 
         for (i in 1..10) {
             try {
                 Thread.sleep(15000)
+                System.setProperty("socksProxyVersion", "4")
                 return restTemplate.postForEntity(url, httpEntity, String::class.java)
             } catch (e: HttpStatusException) {
             } catch (e: SocketException) {
