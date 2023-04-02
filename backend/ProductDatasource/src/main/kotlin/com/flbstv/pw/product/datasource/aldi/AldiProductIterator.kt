@@ -132,9 +132,10 @@ class AldiProductIterator(private val proxyHost: String, private val proxyPort: 
             "BrandProviderSelectedForRoot" to null,
             "UserSelectedShops" to emptyList<String>()
         )
-        val httpEntity = HttpEntity(data, getBaseHeaders())
+        val headers = getBaseHeaders()
+        val httpEntity = HttpEntity(data, headers)
         val response = restTemplate.postForEntity(url, httpEntity, String::class.java)
-        val jwtToken = response.headers["JWT-Auth"]?.get(0) ?: ""
+        val jwtToken = response.headers["jwt-auth"]?.get(0) ?: ""
         logger.info("Got JWT token")
         logger.debug(jwtToken)
         return jwtToken
@@ -182,15 +183,14 @@ class AldiProductIterator(private val proxyHost: String, private val proxyPort: 
     }
 
     private fun getHttpEntity(body: Map<String, Any>): HttpEntity<Map<String, Any>> {
-        val headers = HttpHeaders()
-        headers["Authorization"] = "Bearer $jwtToken"
+        val headers = getBaseHeaders()
+        headers.setBearerAuth(jwtToken)
         return HttpEntity(body, headers)
     }
 
     private fun getBaseHeaders(): HttpHeaders {
         return HttpHeaders().apply {
-            this["user-agent"] =
-                " Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Mobile Safari/537.36"
+            this["user-agent"] = "Crawler"
         }
     }
 
