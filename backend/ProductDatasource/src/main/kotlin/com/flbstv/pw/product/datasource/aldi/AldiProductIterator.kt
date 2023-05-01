@@ -200,8 +200,8 @@ class AldiProductIterator(private val proxyHost: String, private val proxyPort: 
             Proxy.Type.SOCKS,
             InetSocketAddress.createUnresolved(proxyHost, proxyPort)
         )
-        return SimpleClientHttpRequestFactory().apply {
+        return SimpleClientHttpRequestFactory()/*.apply {
             setProxy(proxy)
-        }
+        }*/
     }
 }
